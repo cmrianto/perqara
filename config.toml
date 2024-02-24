@@ -1,0 +1,22 @@
+[Application]
+    ServiceName="perqara"
+    ServiceVersion="1.0.0"
+    Env="local"
+    ServerHost="localhost"
+    ServerPort=10001
+
+[Database]
+    Host="localhost"
+    Port="3306"
+    User="root"
+    Password="admin123"
+    Database="perqara"
+
+[Redis]
+    Host="localhost"
+    Port=6379
+    Database=10
+
+[Auth]
+    Lifespan=24
+    ApiSecret="perqara_secret"

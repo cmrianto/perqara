@@ -1,0 +1,1388 @@
+definitions:
+  http_response.Response:
+    properties:
+      data: {}
+      message:
+        type: string
+      status:
+        type: string
+      statusCode:
+        type: integer
+      timestamp:
+        type: string
+    type: object
+  request.CreateClientRequest:
+    properties:
+      company_name:
+        type: string
+    type: object
+  request.CreateContentTypeRequest:
+    properties:
+      can_create:
+        type: boolean
+      can_delete:
+        type: boolean
+      can_edit:
+        type: boolean
+      can_view:
+        type: boolean
+      name:
+        type: string
+    type: object
+  request.CreateRoleRequest:
+    properties:
+      name:
+        type: string
+      permission_ids:
+        items:
+          type: integer
+        type: array
+    type: object
+  request.CreateUserRequest:
+    properties:
+      client_id:
+        type: integer
+      name:
+        type: string
+      password:
+        type: string
+      role_ids:
+        items:
+          type: integer
+        type: array
+      type:
+        type: string
+      user_name:
+        type: string
+    type: object
+  request.LoginRequest:
+    properties:
+      password:
+        type: string
+      user_name:
+        type: string
+    type: object
+  request.UpdateClientRequest:
+    properties:
+      company_name:
+        type: string
+      id:
+        type: integer
+    type: object
+  request.UpdateRoleRequest:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      permission_ids:
+        items:
+          type: integer
+        type: array
+    type: object
+  response.Client:
+    properties:
+      company_name:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: integer
+    type: object
+  response.ContentType:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      permissions:
+        items:
+          $ref: '#/definitions/response.Permission'
+        type: array
+    type: object
+  response.GetClientsResponse:
+    properties:
+      clients:
+        items:
+          $ref: '#/definitions/response.Client'
+        type: array
+    type: object
+  response.GetContentTypesResponse:
+    properties:
+      content_types:
+        items:
+          $ref: '#/definitions/response.ContentType'
+        type: array
+    type: object
+  response.GetPermissionsResponse:
+    properties:
+      permission:
+        items:
+          $ref: '#/definitions/response.Permission'
+        type: array
+    type: object
+  response.GetRolesResponse:
+    properties:
+      roles:
+        items:
+          $ref: '#/definitions/response.Role'
+        type: array
+    type: object
+  response.GetTotalResponse:
+    properties:
+      total:
+        type: integer
+    type: object
+  response.GetUsersResponse:
+    properties:
+      users:
+        items:
+          $ref: '#/definitions/response.User'
+        type: array
+    type: object
+  response.LoginResponse:
+    properties:
+      token:
+        type: string
+    type: object
+  response.Permission:
+    properties:
+      content_type_id:
+        type: integer
+      content_type_name:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
+  response.Role:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      permission:
+        items:
+          $ref: '#/definitions/response.Permission'
+        type: array
+    type: object
+  response.SuccessMessageResponse:
+    properties:
+      success_message:
+        type: string
+    type: object
+  response.User:
+    properties:
+      clientId:
+        type: integer
+      id:
+        type: integer
+      name:
+        type: string
+      roles:
+        items:
+          $ref: '#/definitions/response.Role'
+        type: array
+      type:
+        type: string
+      user_name:
+        type: string
+    type: object
+info:
+  contact:
+    email: chrisrianto84@gmail.com
+    name: Chris Muladi Rianto
+    url: http://www.swagger.io/support
+  description: Backend API Documentation for Perqara Test
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Perqara Test API Docs
+  version: "1.0"
+paths:
+  /client:
+    get:
+      consumes:
+      - application/json
+      description: API to get clients
+      parameters:
+      - default: Bearer <Add access token here>
+        description: Insert your access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - in: query
+        name: client_province_id
+        type: string
+      - in: query
+        name: last_created_at
+        type: string
+      - in: query
+        name: page
+        type: string
+      - in: query
+        name: search
+        type: string
+      - in: query
+        name: size
+        type: string
+      - in: query
+        name: warehouse_province_id
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/http_response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/response.GetClientsResponse'
+                message:
+                  type: string
+                statusCode:
+                  type: integer
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/http_response.Response'
+            - properties:
+                code:
+                  type: integer
+                message:
+                  type: string
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/http_response.Response'
+            - properties:
+                code:
+                  type: integer
+                message:
+                  type: string
+              type: object
+      summary: Get Client List
+      tags:
+      - Client
+    post:
+      consumes:
+      - application/json
+      description: API to create client
+      parameters:
+      - description: Client Data
+        in: body
+        name: client
+        required: true
+        schema:
+          $ref: '#/definitions/request.CreateClientRequest'
+      - default: Bearer <Add access token here>
+        description: Insert your access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/http_response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/response.SuccessMessageResponse'
+                message:
+                  type: string
+                statusCode:
+                  type: integer
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/http_response.Response'
+            - properties:
+                code:
+                  type: integer
+                message:
+                  type: string
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/http_response.Response'
+            - properties:
+                code:
+                  type: integer
+                message:
+                  type: string
+              type: object
+      summary: Create Client
+      tags:
+      - Client
+    put:
+      consumes:
+      - application/json
+      description: API to update client
+      parameters:
+      - description: Client Data
+        in: body
+        name: client
+        required: true
+        schema:
+          $ref: '#/definitions/request.UpdateClientRequest'
+      - default: Bearer <Add access token here>
+        description: Insert your access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/http_response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/response.SuccessMessageResponse'
+                message:
+                  type: string
+                statusCode:
+                  type: integer
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/http_response.Response'
+            - properties:
+                code:
+                  type: integer
+                message:
+                  type: string
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/http_response.Response'
+            - properties:
+                code:
+                  type: integer
+                message:
+                  type: string
+              type: object
+      summary: Update Client
+      tags:
+      - Client
+  /client/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: API to delete client
+      parameters:
+      - description: Client ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - default: Bearer <Add access token here>
+        description: Insert your access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/http_response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/response.SuccessMessageResponse'
+                message:
+                  type: string
+                statusCode:
+                  type: integer
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/http_response.Response'
+            - properties:
+                code:
+                  type: integer
+                message:
+                  type: string
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/http_response.Response'
+            - properties:
+                code:
+                  type: integer
+                message:
+                  type: string
+              type: object
+      summary: Delete Client
+      tags:
+      - Client
+  /content-type:
+    get:
+      consumes:
+      - application/json
+      description: API to get content types
+      parameters:
+      - default: Bearer <Add access token here>
+        description: Insert your access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - in: query
+        name: last_created_at
+        type: string
+      - in: query
+        name: page
+        type: string
+      - in: query
+        name: search
+        type: string
+      - in: query
+        name: size
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/http_response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/response.GetContentTypesResponse'
+                message:
+                  type: string
+                statusCode:
+                  type: integer
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/http_response.Response'
+            - properties:
+                code:
+                  type: integer
+                message:
+                  type: string
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/http_response.Response'
+            - properties:
+                code:
+                  type: integer
+                message:
+                  type: string
+              type: object
+      summary: Get Content Type List
+      tags:
+      - Auth
+    post:
+      consumes:
+      - application/json
+      description: API to create content type
+      parameters:
+      - description: Content Type Data
+        in: body
+        name: content-type
+        required: true
+        schema:
+          $ref: '#/definitions/request.CreateContentTypeRequest'
+      - default: Bearer <Add access token here>
+        description: Insert your access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/http_response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/response.SuccessMessageResponse'
+                message:
+                  type: string
+                statusCode:
+                  type: integer
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/http_response.Response'
+            - properties:
+                code:
+                  type: integer
+                message:
+                  type: string
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/http_response.Response'
+            - properties:
+                code:
+                  type: integer
+                message:
+                  type: string
+              type: object
+      summary: Create Content Type
+      tags:
+      - Auth
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: API to login
+      parameters:
+      - description: Login Data
+        in: body
+        name: login
+        required: true
+        schema:
+          $ref: '#/definitions/request.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/http_response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/response.LoginResponse'
+                message:
+                  type: string
+                statusCode:
+                  type: integer
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/http_response.Response'
+            - properties:
+                code:
+                  type: integer
+                message:
+                  type: string
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/http_response.Response'
+            - properties:
+                code:
+                  type: integer
+                message:
+                  type: string
+              type: object
+      summary: Login
+      tags:
+      - Auth
+  /permission/dropdown:
+    get:
+      consumes:
+      - application/json
+      description: API to get permission dropdown
+      parameters:
+      - default: Bearer <Add access token here>
+        description: Insert your access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - in: query
+        name: search
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/http_response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/response.GetPermissionsResponse'
+                message:
+                  type: string
+                statusCode:
+                  type: integer
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/http_response.Response'
+            - properties:
+                code:
+                  type: integer
+                message:
+                  type: string
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/http_response.Response'
+            - properties:
+                code:
+                  type: integer
+                message:
+                  type: string
+              type: object
+      summary: Get Permissions Dropdown
+      tags:
+      - Auth
+  /role:
+    get:
+      consumes:
+      - application/json
+      description: API to get roles
+      parameters:
+      - default: Bearer <Add access token here>
+        description: Insert your access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - in: query
+        name: last_created_at
+        type: string
+      - in: query
+        name: page
+        type: string
+      - in: query
+        name: search
+        type: string
+      - in: query
+        name: size
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/http_response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/response.GetRolesResponse'
+                message:
+                  type: string
+                statusCode:
+                  type: integer
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/http_response.Response'
+            - properties:
+                code:
+                  type: integer
+                message:
+                  type: string
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/http_response.Response'
+            - properties:
+                code:
+                  type: integer
+                message:
+                  type: string
+              type: object
+      summary: Get Role List
+      tags:
+      - Auth
+    post:
+      consumes:
+      - application/json
+      description: API to create role
+      parameters:
+      - description: Role Data
+        in: body
+        name: role
+        required: true
+        schema:
+          $ref: '#/definitions/request.CreateRoleRequest'
+      - default: Bearer <Add access token here>
+        description: Insert your access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/http_response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/response.SuccessMessageResponse'
+                message:
+                  type: string
+                statusCode:
+                  type: integer
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/http_response.Response'
+            - properties:
+                code:
+                  type: integer
+                message:
+                  type: string
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/http_response.Response'
+            - properties:
+                code:
+                  type: integer
+                message:
+                  type: string
+              type: object
+      summary: Create Role
+      tags:
+      - Auth
+    put:
+      consumes:
+      - application/json
+      description: API to update role
+      parameters:
+      - description: Role Data
+        in: body
+        name: role
+        required: true
+        schema:
+          $ref: '#/definitions/request.UpdateRoleRequest'
+      - default: Bearer <Add access token here>
+        description: Insert your access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/http_response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/response.SuccessMessageResponse'
+                message:
+                  type: string
+                statusCode:
+                  type: integer
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/http_response.Response'
+            - properties:
+                code:
+                  type: integer
+                message:
+                  type: string
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/http_response.Response'
+            - properties:
+                code:
+                  type: integer
+                message:
+                  type: string
+              type: object
+      summary: Update Role
+      tags:
+      - Auth
+  /role/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: API to delete role
+      parameters:
+      - description: Role ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - default: Bearer <Add access token here>
+        description: Insert your access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/http_response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/response.SuccessMessageResponse'
+                message:
+                  type: string
+                statusCode:
+                  type: integer
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/http_response.Response'
+            - properties:
+                code:
+                  type: integer
+                message:
+                  type: string
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/http_response.Response'
+            - properties:
+                code:
+                  type: integer
+                message:
+                  type: string
+              type: object
+      summary: Delete Role
+      tags:
+      - Auth
+    get:
+      consumes:
+      - application/json
+      description: API to get role detail
+      parameters:
+      - default: Bearer <Add access token here>
+        description: Insert your access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Role ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/http_response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/response.Role'
+                message:
+                  type: string
+                statusCode:
+                  type: integer
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/http_response.Response'
+            - properties:
+                code:
+                  type: integer
+                message:
+                  type: string
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/http_response.Response'
+            - properties:
+                code:
+                  type: integer
+                message:
+                  type: string
+              type: object
+      summary: Get Role Detail
+      tags:
+      - Auth
+  /role/dropdown:
+    get:
+      consumes:
+      - application/json
+      description: API to get roles dropdown
+      parameters:
+      - default: Bearer <Add access token here>
+        description: Insert your access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - in: query
+        name: search
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/http_response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/response.GetRolesResponse'
+                message:
+                  type: string
+                statusCode:
+                  type: integer
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/http_response.Response'
+            - properties:
+                code:
+                  type: integer
+                message:
+                  type: string
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/http_response.Response'
+            - properties:
+                code:
+                  type: integer
+                message:
+                  type: string
+              type: object
+      summary: Get Role Dropdown
+      tags:
+      - Auth
+  /role/total:
+    get:
+      consumes:
+      - application/json
+      description: API to get total role
+      parameters:
+      - default: Bearer <Add access token here>
+        description: Insert your access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/http_response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/response.GetTotalResponse'
+                message:
+                  type: string
+                statusCode:
+                  type: integer
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/http_response.Response'
+            - properties:
+                code:
+                  type: integer
+                message:
+                  type: string
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/http_response.Response'
+            - properties:
+                code:
+                  type: integer
+                message:
+                  type: string
+              type: object
+      summary: Get Total Roles
+      tags:
+      - Auth
+  /user:
+    get:
+      consumes:
+      - application/json
+      description: API to get users
+      parameters:
+      - default: Bearer <Add access token here>
+        description: Insert your access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - collectionFormat: csv
+        in: query
+        items:
+          type: string
+        name: filter_user_types
+        type: array
+      - in: query
+        name: last_created_at
+        type: string
+      - in: query
+        name: page
+        type: string
+      - in: query
+        name: search
+        type: string
+      - in: query
+        name: size
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/http_response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/response.GetUsersResponse'
+                message:
+                  type: string
+                statusCode:
+                  type: integer
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/http_response.Response'
+            - properties:
+                code:
+                  type: integer
+                message:
+                  type: string
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/http_response.Response'
+            - properties:
+                code:
+                  type: integer
+                message:
+                  type: string
+              type: object
+      summary: Get User List
+      tags:
+      - Auth
+    post:
+      consumes:
+      - application/json
+      description: API to create user
+      parameters:
+      - description: User Data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/request.CreateUserRequest'
+      - default: Bearer <Add access token here>
+        description: Insert your access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/http_response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/response.SuccessMessageResponse'
+                message:
+                  type: string
+                statusCode:
+                  type: integer
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/http_response.Response'
+            - properties:
+                code:
+                  type: integer
+                message:
+                  type: string
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/http_response.Response'
+            - properties:
+                code:
+                  type: integer
+                message:
+                  type: string
+              type: object
+      summary: Create User
+      tags:
+      - Auth
+  /user/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: API to delete user
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - default: Bearer <Add access token here>
+        description: Insert your access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/http_response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/response.SuccessMessageResponse'
+                message:
+                  type: string
+                statusCode:
+                  type: integer
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/http_response.Response'
+            - properties:
+                code:
+                  type: integer
+                message:
+                  type: string
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/http_response.Response'
+            - properties:
+                code:
+                  type: integer
+                message:
+                  type: string
+              type: object
+      summary: Delete User
+      tags:
+      - Auth
+    get:
+      consumes:
+      - application/json
+      description: API to get user detail
+      parameters:
+      - default: Bearer <Add access token here>
+        description: Insert your access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/http_response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/response.User'
+                message:
+                  type: string
+                statusCode:
+                  type: integer
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/http_response.Response'
+            - properties:
+                code:
+                  type: integer
+                message:
+                  type: string
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/http_response.Response'
+            - properties:
+                code:
+                  type: integer
+                message:
+                  type: string
+              type: object
+      summary: Get User Detail
+      tags:
+      - Auth
+  /user/total:
+    get:
+      consumes:
+      - application/json
+      description: API to get total user
+      parameters:
+      - default: Bearer <Add access token here>
+        description: Insert your access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/http_response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/response.GetTotalResponse'
+                message:
+                  type: string
+                statusCode:
+                  type: integer
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/http_response.Response'
+            - properties:
+                code:
+                  type: integer
+                message:
+                  type: string
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/http_response.Response'
+            - properties:
+                code:
+                  type: integer
+                message:
+                  type: string
+              type: object
+      summary: Get Total Users
+      tags:
+      - Auth
+swagger: "2.0"
